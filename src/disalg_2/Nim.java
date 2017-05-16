@@ -2,11 +2,11 @@ import java.util.ArrayList;
 
 public class Nim {
 
-	Estado finalturn;
-	Estado firststate;
+	private Estado finalturn;
+	private Estado firststate;
 	
-	public Nim (Estado estadoInicial) {
-		this.firststate = estadoInicial;
+	public Nim (Estado firstate) {
+		this.firststate = firstate;
 		finalturn = null;
 	}
 	
@@ -32,7 +32,7 @@ public class Nim {
 		if(sum == 0) {
 			return false;
 		} else {
-			ArrayList<int[]> arrayHijos = hijos(a);
+			ArrayList<int[]> arrayHijos = calcularHijos(a);
 			for(int i=0; i < arrayHijos.size(); i++) {
 				if(!backwardSolution(arrayHijos.get(i))) {		
 					return true;
@@ -43,39 +43,31 @@ public class Nim {
 	}
 	
 	
-	public void forwardSolution(ArrayList<Estado> hijos) {
+	public void forwardSolution() {
+		ArrayList<Estado> hijos = firststate.calcularHijos();
 		int count = 0;
 	    finalturn = null;
 		while (count < hijos.size() && finalturn == null) {
 			Estado actual = hijos.get(count);
-			for(Estado previous : Main.hijos(actual)) {
+			ArrayList<Estado> hijosActual = actual.calcularHijos();
+			for(Estado previous : hijosActual) {
 				if(hijos.contains(previous)) {
 					previous = hijos.get(hijos.indexOf(previous));
 				} else {
-					hijos.add(previous);
-				}
-				
-				if(actual.getWinner() == 0) {
-					previous.setWinner(1);
-					if(previous.equals(firststate)) {
-						finalturn = actual;
+					if(actual.getWinner() == 0) {
+						previous.setWinner(1);
+						if(previous.equals(firststate)) {
+							finalturn = actual;
+						}
 					}
-				}
+					hijos.add(previous);
+				}		
 			}
 			count++;
 		}
 	}
 	
-	public static ArrayList<int[]> hijos(int[] a) {
-		ArrayList<int[]> arrayHijos = new ArrayList<int[]>();
-		int[] hijo;
-		for(int i=0; i < a.length; i++) {
-			for(int j=1; j <= a[i]; j++) {
-				hijo = a.clone();
-				hijo[i] = a[i] - j;
-				arrayHijos.add(hijo);
-			}
-		}
-		return arrayHijos;
+	public Estado getFinalTurn() {
+		return finalturn;
 	}
 }

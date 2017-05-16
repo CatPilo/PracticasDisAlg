@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class Estado {
 	private int[] sticks;
@@ -17,6 +18,19 @@ public class Estado {
 		}
 		
 	}
+
+	public ArrayList<Estado> calcularHijos() {
+		ArrayList<Estado> arrayHijos = new ArrayList<Estado>();
+		for(int i=0; i < sticks.length; i++) {
+			for(int j=1; j <= sticks[i]; j++) {
+				int[] sticksHijo = sticks.clone();
+				sticksHijo[i] = sticks[i] - j;
+				arrayHijos.add(new Estado(sticksHijo));
+			}
+		}
+		return arrayHijos;
+	}
+	
 	public int[] getSticks() {
 		return sticks;
 	}
